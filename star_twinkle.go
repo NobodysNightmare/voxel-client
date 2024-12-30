@@ -18,16 +18,21 @@ func (e *StarTwinkle) String() string {
 
 func (e *StarTwinkle) Progress() *Box {
 	finished := true
+	speed := 5
 
 	for i, _ := range e.current.voxels {
 		level := e.current.voxels[i].R
-		if level > e.target.voxels[i].R {
-			e.current.voxels[i] = Voxel{level - 1, level - 1, level - 1}
+		target := e.target.voxels[i].R
+		nextLevel := level
+		if level > target {
+			nextLevel = max(level-speed, target)
 			finished = false
-		} else if level < e.target.voxels[i].R {
-			e.current.voxels[i] = Voxel{level + 1, level + 1, level + 1}
+		} else if level < target {
+			nextLevel = min(level+speed, target)
 			finished = false
 		}
+
+		e.current.voxels[i] = Voxel{nextLevel, nextLevel, nextLevel}
 	}
 
 	if finished {
